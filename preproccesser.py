@@ -16,6 +16,13 @@ def preprocess(data):
     # Split time into hour and minute
     df[['Hour', 'Minute']] = df['Time'].str.split(':', expand=True)
 
+    df['Month Name'] = df['Month'].apply(lambda x: pd.to_datetime(str(x), format='%m').strftime('%B'))
+
+    # Combine the date and time columns into a single datetime column
+    df['DateTime'] = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour', 'Minute']])
+    # Extract day name
+    df['Day Name'] = df['DateTime'].dt.day_name()  
+
     # Reorder columns
-    df = df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'User', 'Message','Date']]
+    df = df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'User', 'Message','Date','Day Name','Month Name']]
     return df

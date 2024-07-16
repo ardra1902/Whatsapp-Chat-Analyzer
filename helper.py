@@ -70,9 +70,52 @@ def most_common_words(selected_user,df):
     most_common_df = pd.DataFrame(Counter(words).most_common(20))
     return most_common_df
 
+def monthly_timeline(selected_user,df):
+    if selected_user!="Overall":
+        df=df[df["User"]==selected_user]
+    df['Month Name'] = df['Month'].apply(lambda x: pd.to_datetime(str(x), format='%m').strftime('%B'))
+    timeline=df.groupby(['Year','Month','Month Name']).count()['Message'].reset_index()
+    time=[]
+    for i in range(timeline.shape[0]):
+        time.append(timeline['Month Name'][i] + '-' + str(timeline['Year'][i]))
+    timeline['time']= time
+    return timeline
+
+def daily_timeline(selected_user,df):
+    if selected_user!="Overall":
+        df[df['User']==selected_user]
+    daily_timeline=df.groupby(['Day']).count()['Message'].reset_index()
+    return daily_timeline
+
+def weekly_activity_map(selected_user,df):
+    if selected_user!="Overall":
+        df[df['User']==selected_user]
+    return df['Day Name'].value_counts()
 
 
+def month_activity_map(selected_user,df):
 
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+    return df['Month Name'].value_counts()
+
+
+def activity_heatmap(selected_user,df):
+
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+    user_heatmap = df.pivot_table(index='Day_name', columns='period', values='Message', aggfunc='count').fillna(0)
+
+    return user_heatmap
     
-    
+
+
+
+
+
+
+        
+        
     
